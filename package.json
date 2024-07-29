@@ -1,0 +1,21 @@
+{
+  "name": "com.yeltic.sequencersystem",
+  "version": "0.0.1",
+  "displayName": "Sequencer System",
+  "description": "A flexible sequencing system for Unity",
+  "unity": "2022.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Oxitrotamundos/Sequencing-system"
+  },
+  "dependencies": {},
+  "keywords": [
+    "sequencer",
+    "automation"
+  ],
+  "author": {
+    "name": "Antonio Bravo",
+    "email": "89479775+Oxitrotamundos@users.noreply.github.com",
+    "url": "https://github.com/Oxitrotamundos/Sequencing-system"
+  }
+}
