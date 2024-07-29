@@ -1,0 +1,18 @@
+{
+    "name": "Yeltic.SequencerSystem.Editor",
+    "rootNamespace": "Yeltic.SequencerSystem.Editor",
+    "references": [
+        "Yeltic.SequencerSystem"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

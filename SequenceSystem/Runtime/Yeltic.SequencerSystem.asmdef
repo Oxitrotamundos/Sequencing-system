@@ -1,0 +1,14 @@
+{
+    "name": "Yeltic.SequencerSystem",
+    "rootNamespace": "Yeltic.SequencerSystem",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
