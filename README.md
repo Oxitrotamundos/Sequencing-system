@@ -1,0 +1,1 @@
+The Sequencer System is a flexible and powerful tool designed for Unity that allows developers to create and execute complex sequences of actions. This system uses a turn-based, action-based approach, making it easy to create complex, synchronized behaviors in games and applications.
