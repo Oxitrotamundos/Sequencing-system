@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem
 {
     public class ActivateObjectObserver : BaseObserver
     {
@@ -45,7 +45,14 @@ namespace Yeltic.SequencerSystem
         {
             if (actionChannel == channel)
             {
-                ActivationService.HandleActivation(channel, gameObject, activate);
+                if (this != null && gameObject != null) // Verificar que el objeto no sea nulo
+                {
+                    ActivationService.HandleActivation(channel, gameObject, activate);
+                }
+                else
+                {
+                    Debug.LogWarning("ActivateObjectObserver: El objeto ha sido destruido o es nulo.");
+                }
             }
         }
     }

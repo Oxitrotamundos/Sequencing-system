@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem
 {
     public abstract class BaseObserver : MonoBehaviour
     {

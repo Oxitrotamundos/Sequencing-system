@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem
 {
     [System.Serializable]
     public class Turn

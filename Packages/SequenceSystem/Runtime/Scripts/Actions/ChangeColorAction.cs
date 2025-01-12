@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem
 {
     [System.Serializable]
     public class ChangeColorAction : BaseAction
@@ -13,6 +13,7 @@ namespace Yeltic.SequencerSystem
             return "Change Color";
         }
 
+   
         public override void Execute()
         {
             ActionEvents.TriggerChangeColor(channel, newColor);
@@ -22,7 +23,10 @@ namespace Yeltic.SequencerSystem
         {
             DrawChannelField();
             DrawDurationField();
-            newColor = EditorGUILayout.ColorField("New Color", newColor);
+
+            #if UNITY_EDITOR
+            newColor = UnityEditor.EditorGUILayout.ColorField("New Color", newColor);
+            #endif
         }
     }
 }

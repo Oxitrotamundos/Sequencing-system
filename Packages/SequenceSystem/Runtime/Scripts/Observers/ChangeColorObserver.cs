@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem.Observers
 {
     public class ChangeColorObserver : BaseObserver
     {

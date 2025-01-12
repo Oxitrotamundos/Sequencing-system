@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem
 {
     public static class ActivationService
     {
@@ -54,6 +54,12 @@ namespace Yeltic.SequencerSystem
             {
                 Debug.LogWarning($"ActivationService: Null object found in channel {channel}");
             }
+        }
+
+        public static void ClearAllRegistrations()
+        {
+            channelObjects.Clear();
+            Debug.Log("ActivationService: All registrations have been cleared");
         }
     }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem
 {
     [System.Serializable]
     public class ActivateObjectAction : BaseAction
@@ -14,6 +14,7 @@ namespace Yeltic.SequencerSystem
             return $"Activate Object ({(activate ? "Enable" : "Disable")})";
         }
 
+
         public override void Execute()
         {
             Debug.Log($"ActivateObjectAction: Executing for channel {actionChannel}, activate: {activate}");
@@ -22,9 +23,13 @@ namespace Yeltic.SequencerSystem
 
         public override void DrawInspector()
         {
+            #if UNITY_EDITOR
             actionChannel = EditorGUILayout.IntField("Channel", actionChannel);
+            #endif
             DrawDurationField();
+            #if UNITY_EDITOR
             activate = EditorGUILayout.Toggle("Activate", activate);
+            #endif
         }
     }
 }

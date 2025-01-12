@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-namespace Yeltic.SequencerSystem
+namespace SequencerSystem
 {
     public class Sequencer : MonoBehaviour
     {
@@ -12,6 +13,9 @@ namespace Yeltic.SequencerSystem
         public List<Turn> Turns { get => turns; set => turns = value; }
         public float InitialDelay { get => initialDelay; set => initialDelay = value; }
 
+        public bool IsExecuting { get; private set; }
+        public event Action OnSequenceComplete;
+
         public void ExecuteSequence()
         {
             StartCoroutine(ExecuteSequenceCoroutine());
@@ -19,6 +23,8 @@ namespace Yeltic.SequencerSystem
 
         private IEnumerator ExecuteSequenceCoroutine()
         {
+            IsExecuting = true;
+
             yield return new WaitForSeconds(initialDelay);
 
             foreach (var turn in turns)
@@ -32,6 +38,9 @@ namespace Yeltic.SequencerSystem
 
                 yield return new WaitForSeconds(turn.GetTotalDuration() - turn.initialDelay);
             }
+
+            IsExecuting = false;
+            OnSequenceComplete?.Invoke();
         }
 
         public void ResetTurns()
