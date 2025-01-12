@@ -1,6 +1,6 @@
 {
   "name": "com.yeltic.sequencersystem",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "Sequencer System",
   "description": "A flexible sequencing system for Unity",
   "unity": "2022.3",
