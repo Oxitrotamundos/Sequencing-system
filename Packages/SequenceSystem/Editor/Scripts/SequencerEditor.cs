@@ -13,74 +13,114 @@ namespace SequencerSystem
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-
             Sequencer sequencer = (Sequencer)target;
 
-            if (GUILayout.Button("Force Save Changes"))
+            EditorGUILayout.Space(10);
+            GUIStyle headerStyle = new GUIStyle(EditorStyles.boldLabel);
+            headerStyle.fontSize = 16;
+            headerStyle.alignment = TextAnchor.MiddleCenter;
+            EditorGUILayout.LabelField("Sequence Editor", headerStyle);
+            EditorGUILayout.Space(5);
+
+            EditorGUILayout.BeginHorizontal();
+            GUI.backgroundColor = new Color(0.7f, 0.9f, 0.7f);
+            if (GUILayout.Button("Save Changes", GUILayout.Height(30)))
             {
                 EditorUtility.SetDirty(target);
                 AssetDatabase.SaveAssets();
             }
-
-            if (GUILayout.Button("Reinitialize Sequencer"))
+            GUI.backgroundColor = new Color(0.9f, 0.7f, 0.7f);
+            if (GUILayout.Button("Reset Sequencer", GUILayout.Height(30)))
             {
                 sequencer.ResetTurns();
                 EditorUtility.SetDirty(target);
             }
+            GUI.backgroundColor = Color.white;
+            EditorGUILayout.EndHorizontal();
 
-            sequencer.InitialDelay = EditorGUILayout.FloatField("Initial Delay", sequencer.InitialDelay);
+            EditorGUILayout.Space(10);
 
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Turns", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUI.BeginChangeCheck();
+            float newDelay = EditorGUILayout.FloatField("Initial Delay", sequencer.InitialDelay);
+            if (EditorGUI.EndChangeCheck())
+            {
+                sequencer.InitialDelay = newDelay;
+                EditorUtility.SetDirty(target);
+            }
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.Space(15);
+
+            GUIStyle turnHeaderStyle = new GUIStyle(EditorStyles.boldLabel);
+            turnHeaderStyle.fontSize = 14;
+            EditorGUILayout.LabelField("Turns", turnHeaderStyle);
 
             for (int i = 0; i < sequencer.Turns.Count; i++)
             {
                 DrawTurn(sequencer.Turns[i], i);
             }
 
-            if (GUILayout.Button("Add Turn"))
+            EditorGUILayout.Space(5);
+            GUI.backgroundColor = new Color(0.8f, 0.8f, 1f);
+            if (GUILayout.Button("Add Turn", GUILayout.Height(25)))
             {
                 sequencer.Turns.Add(new Turn());
                 EditorUtility.SetDirty(target);
             }
 
-            if (GUILayout.Button("Execute Sequence"))
+            EditorGUILayout.Space(5);
+            GUI.backgroundColor = new Color(1f, 0.9f, 0.7f);
+            if (GUILayout.Button("Execute Sequence", GUILayout.Height(30)))
             {
                 sequencer.ExecuteSequence();
             }
+            GUI.backgroundColor = Color.white;
 
             serializedObject.ApplyModifiedProperties();
         }
 
         private void DrawTurn(Turn turn, int turnIndex)
         {
-            EditorGUILayout.BeginVertical(GUI.skin.box);
+            var turnBoxStyle = new GUIStyle(GUI.skin.box);
+            turnBoxStyle.padding = new RectOffset(10, 10, 10, 10);
+            turnBoxStyle.margin = new RectOffset(0, 0, 5, 5);
 
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical(turnBoxStyle);
+
+            var headerStyle = new GUIStyle(EditorStyles.toolbar);
+            headerStyle.fixedHeight = 30;
+
+            EditorGUILayout.BeginHorizontal(headerStyle);
 
             if (!turnFoldouts.ContainsKey(turnIndex))
             {
                 turnFoldouts[turnIndex] = true;
             }
 
-            turnFoldouts[turnIndex] = EditorGUILayout.Foldout(turnFoldouts[turnIndex], $"Turn {turnIndex + 1}", true);
+            GUIStyle foldoutStyle = new GUIStyle(EditorStyles.foldout);
+            foldoutStyle.fontSize = 12;
+            foldoutStyle.fontStyle = FontStyle.Bold;
 
-            // Aqui se dibujan los nuevos botones :D
+            turnFoldouts[turnIndex] = EditorGUILayout.Foldout(turnFoldouts[turnIndex],
+                $"Turn {turnIndex + 1}", true, foldoutStyle);
+
             GUI.enabled = turnIndex > 0;
-            if (GUILayout.Button("↑", GUILayout.Width(25)))
+            if (GUILayout.Button("↑", GUILayout.Width(30), GUILayout.Height(20)))
             {
                 SwapTurns(turnIndex, turnIndex - 1);
             }
             GUI.enabled = true;
 
             GUI.enabled = turnIndex < ((Sequencer)target).Turns.Count - 1;
-            if (GUILayout.Button("↓", GUILayout.Width(25)))
+            if (GUILayout.Button("↓", GUILayout.Width(30), GUILayout.Height(20)))
             {
                 SwapTurns(turnIndex, turnIndex + 1);
             }
             GUI.enabled = true;
 
-            if (GUILayout.Button("Remove Turn", GUILayout.Width(100)))
+            GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
+            if (GUILayout.Button("Remove", GUILayout.Width(70), GUILayout.Height(20)))
             {
                 Sequencer sequencer = (Sequencer)target;
                 sequencer.Turns.RemoveAt(turnIndex);
@@ -90,14 +130,26 @@ namespace SequencerSystem
                 EditorGUILayout.EndVertical();
                 return;
             }
+            GUI.backgroundColor = Color.white;
+
             EditorGUILayout.EndHorizontal();
 
             if (turnFoldouts[turnIndex])
             {
                 EditorGUI.indentLevel++;
 
-                turn.initialDelay = EditorGUILayout.FloatField("Initial Delay", turn.initialDelay);
+                EditorGUILayout.Space(5);
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                EditorGUI.BeginChangeCheck();
+                float newDelay = EditorGUILayout.FloatField("Initial Delay", turn.initialDelay);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    turn.initialDelay = newDelay;
+                    EditorUtility.SetDirty(target);
+                }
+                EditorGUILayout.EndVertical();
 
+                EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
 
@@ -108,10 +160,13 @@ namespace SequencerSystem
 
                 EditorGUI.indentLevel--;
 
-                if (GUILayout.Button("Add Action"))
+                EditorGUILayout.Space(5);
+                GUI.backgroundColor = new Color(0.7f, 0.9f, 0.7f);
+                if (GUILayout.Button("Add Action", GUILayout.Height(25)))
                 {
                     AddAction(turn);
                 }
+                GUI.backgroundColor = Color.white;
 
                 EditorGUI.indentLevel--;
             }
@@ -130,7 +185,11 @@ namespace SequencerSystem
 
         private void DrawAction(Turn turn, int actionIndex)
         {
-            EditorGUILayout.BeginVertical(GUI.skin.box);
+            var actionStyle = new GUIStyle(GUI.skin.box);
+            actionStyle.padding = new RectOffset(5, 5, 5, 5);
+            actionStyle.margin = new RectOffset(10, 10, 2, 2);
+
+            EditorGUILayout.BeginVertical(actionStyle);
 
             BaseAction action = turn.actions[actionIndex];
             string actionKey = $"turn_{turn.GetHashCode()}_action_{actionIndex}";
@@ -140,15 +199,21 @@ namespace SequencerSystem
                 actionFoldouts[actionKey] = true;
             }
 
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
             string foldoutLabel = string.IsNullOrEmpty(action.CustomLabel)
                 ? action.GetActionName()
                 : $"{action.CustomLabel} ({action.GetActionName()})";
 
-            actionFoldouts[actionKey] = EditorGUILayout.Foldout(actionFoldouts[actionKey], foldoutLabel, true);
+            GUIStyle actionFoldoutStyle = new GUIStyle(EditorStyles.foldout);
+            actionFoldoutStyle.fontSize = 11;
 
-            if (GUILayout.Button("↑", GUILayout.Width(20)) && actionIndex > 0)
+            actionFoldouts[actionKey] = EditorGUILayout.Foldout(actionFoldouts[actionKey],
+                foldoutLabel, true, actionFoldoutStyle);
+
+            GUILayout.FlexibleSpace();
+
+            if (GUILayout.Button("↑", GUILayout.Width(25), GUILayout.Height(18)) && actionIndex > 0)
             {
                 var temp = turn.actions[actionIndex];
                 turn.actions[actionIndex] = turn.actions[actionIndex - 1];
@@ -156,7 +221,8 @@ namespace SequencerSystem
                 EditorUtility.SetDirty(target);
             }
 
-            if (GUILayout.Button("↓", GUILayout.Width(20)) && actionIndex < turn.actions.Count - 1)
+            if (GUILayout.Button("↓", GUILayout.Width(25), GUILayout.Height(18)) &&
+                actionIndex < turn.actions.Count - 1)
             {
                 var temp = turn.actions[actionIndex];
                 turn.actions[actionIndex] = turn.actions[actionIndex + 1];
@@ -164,7 +230,8 @@ namespace SequencerSystem
                 EditorUtility.SetDirty(target);
             }
 
-            if (GUILayout.Button("X", GUILayout.Width(20)))
+            GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
+            if (GUILayout.Button("X", GUILayout.Width(25), GUILayout.Height(18)))
             {
                 turn.actions.RemoveAt(actionIndex);
                 actionFoldouts.Remove(actionKey);
@@ -173,12 +240,26 @@ namespace SequencerSystem
                 EditorGUILayout.EndVertical();
                 return;
             }
+            GUI.backgroundColor = Color.white;
+
             EditorGUILayout.EndHorizontal();
 
             if (actionFoldouts[actionKey])
             {
                 EditorGUI.indentLevel++;
-                action.CustomLabel = EditorGUILayout.TextField("Custom Label", action.CustomLabel);
+                EditorGUILayout.Space(5);
+
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                EditorGUI.BeginChangeCheck();
+                string newLabel = EditorGUILayout.TextField("Custom Label", action.CustomLabel);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    action.CustomLabel = newLabel;
+                    EditorUtility.SetDirty(target);
+                }
+                EditorGUILayout.EndVertical();
+
+                EditorGUILayout.Space(5);
                 action.DrawInspector();
                 EditorGUI.indentLevel--;
             }
@@ -220,6 +301,7 @@ namespace SequencerSystem
             // menu.AddItem(new GUIContent("Systems/NPC/NPC Movement"), false, () => CreateAction(turn, typeof(NPCMovementAction)));
             // menu.AddItem(new GUIContent("Systems/NPC/NPC Actions"), false, () => CreateAction(turn, typeof(NPCActionSequencerAction)));
             //menu.AddItem(new GUIContent("Systems/NPC/Set Look at"), false, () => CreateAction(turn, typeof(SetLookatTargetAction)));
+            
 
             //Plugin - Descomenta si se importaron los paquetes de animación:
             //menu.AddItem(new GUIContent("Animator/Trigger Animation"), false, () => CreateAction(turn, typeof(AnimationTriggerAction)));
